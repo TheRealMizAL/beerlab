@@ -44,18 +44,17 @@ UserMinModel = pydantic_model_creator(User, exclude_readonly=True, name="UserMin
 
 class UserRegisterModel(UserMinModel):
     model_config = ConfigDict(
-        json_schema_extra={
-            "examples": [
-                {
-                    "username": "aboba",
-                    "first_name": "Nill",
-                    "last_name": "Kiggers",
-                    "birthday": random_date(date(1970, 1, 1)),
-                    "login": "login",
-                    "password": "passwd"
-                }
-            ]
-        }
-)
-    login: str
+            json_schema_extra={
+                "examples": [
+                    {
+                        "username": "aboba",
+                        "first_name": "Nill",
+                        "last_name": "Kiggers",
+                        "birthday": random_date(date(1970, 1, 1)),
+                        "password": "passwd"
+                    }
+                ]
+            },
+            title="UserRegisterModel"
+    )
     password: str

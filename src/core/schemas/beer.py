@@ -39,7 +39,6 @@ Tortoise.init_models(["core.db.models"], app_label="main")
 BeerMaxModel = pydantic_model_creator(Beer, exclude_readonly=False, name='BeerMaxModel')
 BeerFullModel = pydantic_model_creator(Beer, exclude_readonly=False,
                                        exclude=('reviews', 'manufacturer'),
-                                       optional=('abv', 'ibu', 'manufacturer_id', 'plato',),
                                        name='BeerFullModel', model_config=beer_model_config)
 BeerMinModel = pydantic_model_creator(Beer, exclude_readonly=True,
                                       optional=('abv', 'ibu', 'manufacturer_id', 'plato',),

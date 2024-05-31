@@ -10,7 +10,7 @@ from .reviews import Review
 class Manufacturer(Model):
     id = fields.IntField(primary_key=True)
     name = fields.CharField(max_length=255, null=False)
-    year_of_creation = fields.IntField(null=False, validators=[MinValueValidator(1970), BeforeTodayValidator()])
+    year_of_creation = fields.IntField(null=True, validators=[MinValueValidator(1970), BeforeTodayValidator()])
     city: fields.ForeignKeyRelation["City"] = fields.ForeignKeyField('main.City',
                                                                      null=True, on_delete=fields.SET_NULL,
                                                                      on_update=fields.CASCADE)

@@ -12,6 +12,7 @@ from v1.endpoints.beer import beer_router
 from v1.endpoints.city import city_router
 from v1.endpoints.user import user_router
 from v1.endpoints.reviews import review_router
+from v1.endpoints.oauth import oauth_router
 from v1.endpoints.manufacturers import manufacturer_router
 
 tags = [
@@ -33,7 +34,10 @@ tags = [
     }
 ]
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi_tags=tags)
+app = FastAPI(docs_url=None, redoc_url=None, openapi_tags=tags,
+              title="BeerLab forum API",
+              version="0.1.0",
+              summary="Простой почти RESTful API интерфейс для управления пивной доской оценок")
 
 
 @app.get("/docs", include_in_schema=False)
@@ -65,4 +69,5 @@ app.include_router(city_router)
 app.include_router(manufacturer_router)
 app.include_router(user_router)
 app.include_router(review_router)
+app.include_router(oauth_router)
 register_tortoise(app, config=TORTOISE_ORM)

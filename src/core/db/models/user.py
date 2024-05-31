@@ -5,8 +5,8 @@ from .reviews import Review
 
 class User(Model):
     id = fields.IntField(primary_key=True)
-    username = fields.CharField(max_length=20, null=True)
-    first_name = fields.CharField(max_length=255, null=False)
+    username = fields.CharField(max_length=20, null=False, unique=True)
+    first_name = fields.CharField(max_length=255, null=True)
     last_name = fields.CharField(max_length=255, null=True)
 
     birthday = fields.DateField(null=True)
@@ -16,7 +16,7 @@ class User(Model):
     reviews: fields.ReverseRelation["Review"]
 
     @property
-    async def link(self):
+    def link(self):
         if self.username:
             return f"@{self.username}"
         return f"@id{self.id}"
@@ -31,6 +31,5 @@ class User(Model):
 
 
 class Creds(Model):
-    login = fields.CharField(max_length=255, null=False)
     passwd = fields.CharField(max_length=60, null=False)
     user: fields.OneToOneRelation["User"] = fields.OneToOneField('main.User', 'creds', primary_key=True)

@@ -1,14 +1,23 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Path, Response, HTTPException, status
+from fastapi import APIRouter, Path, Response, HTTPException, status, Security
+from tortoise.exceptions import IntegrityError
 from tortoise.transactions import in_transaction
 
 from core.db.models import User, Creds
+from core.schemas.errors import BadUserError, ExistingUserError
+from core.schemas.security import TokenData
 from core.schemas.user import UserFullModel, UserMinModel, UserRegisterModel
-from core.schemas.errors import BadUserError
+from core.security import get_passwd_hash
+from ..dependencies import get_current_active_user
 
 user_router = APIRouter(prefix='/user',
                         tags=['User'])
+
+
+@user_router.get('/me')
+async def get_me(current_user: Annotated[TokenData, Security(get_current_active_user)]):
+    return current_user
 
 
 @user_router.get('/{user_id}',
@@ -21,12 +30,18 @@ async def get_user(user_id: Annotated[int, Path()]) -> UserFullModel:
         raise HTTPException(status.HTTP_404_NOT_FOUND, BadUserError)
 
 
-@user_router.post('/', status_code=status.HTTP_201_CREATED)
+@user_router.post('/',
+                  responses={200: {'model': UserFullModel},
+                             422: {'model': ExistingUserError}})
 async def register_user(response: Response, user: UserRegisterModel) -> UserFullModel:
     async with in_transaction() as connection:
         user = user.dict(exclude_unset=True)
-        user_db = await User.create(**user, using_db=connection)
-        await Creds(user_id=user_db.id, login=user['login'], passwd=user['password']).save(using_db=connection)
+        try:
+            user_db = await User.create(**user, using_db=connection)
+            await Creds(user_id=user_db.id, passwd=await get_passwd_hash(user['password'])).save(
+                    using_db=connection)
+        except IntegrityError:
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, ExistingUserError)
     response.status_code = status.HTTP_201_CREATED
     return user_db
 

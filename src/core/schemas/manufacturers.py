@@ -31,8 +31,7 @@ manufacturer_min_config = ConfigDict(
 
 Tortoise.init_models(["core.db.models.city"], app_label="main")
 ManufacturerFullModel = pydantic_model_creator(Manufacturer, exclude_readonly=False, exclude=("beers", "city",),
-                                               optional=("city_id",),
                                                name="ManufacturerFullModel", model_config=manufacturer_full_model_config)
 ManufacturerMinModel = pydantic_model_creator(Manufacturer, exclude_readonly=True,
-                                              optional=("city_id",),
+                                              optional=("city_id", "year_of_creation", "name"),
                                               name="ManufacturerMinModel", model_config=manufacturer_min_config)

@@ -26,6 +26,11 @@ class BadUserError(UnknownError):
     message: str = "Bad user"
 
 
+class ExistingUserError(UnknownError):
+    code: int = 12
+    message: str = "User already exists"
+
+
 class BadReviewError(UnknownError):
     code: int = 15  # оценка 1/5
     message: str = "Bad review"

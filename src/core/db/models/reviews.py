@@ -8,6 +8,6 @@ class Review(Model):
     rating = fields.IntField(null=False, validators=[MinValueValidator(1), MaxValueValidator(5)])
 
     beer = fields.ForeignKeyField('main.Beer', 'reviews',
-                                  null=True, on_delete=fields.CASCADE)
+                                  null=False, on_delete=fields.CASCADE)
     user = fields.ForeignKeyField('main.User', 'reviews',
-                                  null=True, on_delete=fields.SET_NULL)
+                                  null=False, on_delete=fields.CASCADE)
