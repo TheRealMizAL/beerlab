@@ -41,7 +41,6 @@ async def generate_data():
         beer = Beer(name=randomword(30),
                     style=randomword(10),
                     alc=random.uniform(0, 20),
-                    abv=random.uniform(0, 20),
                     plato=random.uniform(0, 20),
                     ibu=random.uniform(0, 20),
                     manufacturer=random.choice(manufacturers))
